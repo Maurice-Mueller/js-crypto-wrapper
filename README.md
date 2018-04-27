@@ -1,6 +1,7 @@
 # js-crypto-wrapper
 [![Build Status](https://travis-ci.org/esentri/js-crypto-wrapper.svg?branch=master)](https://travis-ci.org/esentri/js-crypto-wrapper)
 [![Coverage Status](https://coveralls.io/repos/github/esentri/js-crypto-wrapper/badge.svg?branch=master)](https://coveralls.io/github/esentri/js-crypto-wrapper?branch=master)
+[![npm version](https://badge.fury.io/js/%40esentri%2Fjs-crypto-wrapper.svg)](https://badge.fury.io/js/%40esentri%2Fjs-crypto-wrapper)
 
 a wrapper for WebCryptoAPI
 
