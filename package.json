@@ -89,6 +89,8 @@
       "lint-staged": "^7.0.0",
       "lodash.camelcase": "^4.3.0",
       "node-webcrypto-ossl": "^1.0.36",
+      "node-gyp": "3.6.2",
+      "node": "9.5.0",
       "prompt": "^1.0.0",
       "replace-in-file": "^3.0.0-beta.2",
       "rimraf": "^2.6.1",
