@@ -10,6 +10,7 @@ addons:
 branches:
   only:
     - master
+    - travis-fix
 cache:
   yarn: true
   directories:
