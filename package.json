@@ -1,0 +1,111 @@
+{
+   "name": "@esentri/js-crypto-wrapper",
+   "version": "0.0.0",
+   "description": "a wrapper around WebCryptoAPI",
+   "keywords": [],
+   "main": "dist/crypto-wrapper.umd.js",
+   "module": "dist/crypto-wrapper.es5.js",
+   "typings": "dist/types/crypto-wrapper.d.ts",
+   "files": [
+      "dist"
+   ],
+   "author": "esentri AG <github@esentri.com> (https://www.esentri.com/)",
+   "homepage": "https://github.com/esentri/js-de-serializer",
+   "contributors": [
+      "Maurice Müller <maurice.mueller@esentri.com> (https://github.com/Maurice-Mueller)"
+   ],
+   "repository": {
+      "type": "git",
+      "url": "github:esentri/js-crypto-wrapper"
+   },
+   "license": "MIT",
+   "engines": {
+      "node": ">=6.0.0"
+   },
+   "scripts": {
+      "lint": "tslint -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+      "prebuild": "rimraf dist",
+      "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es2018 --theme minimal --mode file src  --ignoreCompilerErrors src/",
+      "start": "rollup -c rollup.config.ts -w",
+      "test": "jest",
+      "test:watch": "jest --watch",
+      "test:prod": "npm run lint && npm run test -- --coverage --no-cache",
+      "deploy-docs": "ts-node tools/gh-pages-publish",
+      "report-coverage": "cat ./coverage/lcov.info | coveralls",
+      "commit": "git-cz",
+      "semantic-release": "semantic-release",
+      "semantic-release-prepare": "ts-node tools/semantic-release-prepare"
+   },
+   "config": {
+      "commitizen": {
+         "path": "node_modules/cz-conventional-changelog"
+      },
+      "validate-commit-msg": {
+         "types": "conventional-commit-types",
+         "helpMessage": "Use \"npm run commit\" instead, we use conventional-changelog format :) (https://github.com/commitizen/cz-cli)"
+      }
+   },
+   "jest": {
+      "transform": {
+         ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      },
+      "setupFiles": [
+         "<rootDir>/test/jestSetup.js"
+      ],
+      "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+      "moduleFileExtensions": [
+         "ts",
+         "tsx",
+         "js"
+      ],
+      "coveragePathIgnorePatterns": [
+         "/node_modules/",
+         "/test/",
+         "/src/config/"
+      ],
+      "coverageThreshold": {
+         "global": {
+            "branches": 90,
+            "functions": 95,
+            "lines": 95,
+            "statements": 95
+         }
+      },
+      "collectCoverage": true,
+      "mapCoverage": true
+   },
+   "devDependencies": {
+      "@types/jest": "^22.0.0",
+      "@types/node": "^9.3.0",
+      "asmcrypto.js": "^0.22.0",
+      "colors": "^1.1.2",
+      "commitizen": "^2.9.6",
+      "coveralls": "^3.0.0",
+      "cross-env": "^5.0.1",
+      "cz-conventional-changelog": "^2.0.0",
+      "elliptic": "^6.4.0",
+      "husky": "^0.14.0",
+      "jest": "^22.0.2",
+      "lint-staged": "^7.0.0",
+      "lodash.camelcase": "^4.3.0",
+      "node-webcrypto-ossl": "^1.0.36",
+      "prompt": "^1.0.0",
+      "replace-in-file": "^3.0.0-beta.2",
+      "rimraf": "^2.6.1",
+      "rollup": "^0.57.0",
+      "rollup-plugin-commonjs": "^9.0.0",
+      "rollup-plugin-json": "^2.3.0",
+      "rollup-plugin-node-resolve": "^3.0.0",
+      "rollup-plugin-sourcemaps": "^0.4.2",
+      "rollup-plugin-typescript2": "^0.11.1",
+      "semantic-release": "^15.0.0",
+      "text-encoding-shim": "^1.0.0",
+      "ts-jest": "^22.0.0",
+      "ts-node": "^5.0.1",
+      "tslint": "^5.8.0",
+      "tslint-config-standard": "^7.0.0",
+      "typedoc": "^0.11.0",
+      "typescript": "^2.8.3",
+      "validate-commit-msg": "^2.12.2"
+   }
+}
