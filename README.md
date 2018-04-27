@@ -1,4 +1,6 @@
 # js-crypto-wrapper
+[![Build Status](https://travis-ci.org/esentri/js-crypto-wrapper.svg?branch=master)](https://travis-ci.org/esentri/js-crypto-wrapper)
+[![Coverage Status](https://coveralls.io/repos/github/esentri/js-crypto-wrapper/badge.svg?branch=master)](https://coveralls.io/github/esentri/js-crypto-wrapper?branch=master)
 
 a wrapper for WebCryptoAPI
 
