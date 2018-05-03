@@ -16,12 +16,11 @@ export class EncryptedObject {
       return {name: this.keyParams.name, iv: this.vector.asArray()}
    }
 
-   public decrypt (key: SymmetricKey | Promise<SymmetricKey>): Promise<ArrayBuffer> {
-      if (key instanceof SymmetricKey) return this.__decrypt(key)
-      return key.then(resolvedKey => this.__decrypt(resolvedKey))
+   public decrypt (key: SymmetricKey, prototype: any = null): Promise<any> {
+      return this.__decrypt(key, prototype)
    }
 
-   private __decrypt (key: SymmetricKey): Promise<any> {
-      return key.decrypt(this.decryptionParameters(), this.content)
+   private __decrypt (key: SymmetricKey, prototype: any): Promise<any> {
+      return key.decrypt(this.decryptionParameters(), this.content, prototype)
    }
 }

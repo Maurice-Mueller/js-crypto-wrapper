@@ -6,6 +6,9 @@ import {KeyAlgorithm} from '../src/config/KeyAlgorithm'
 
 describe('test symmetric key', () => {
 
+   const helloWorldString = 'hello world'
+   const numberForEncryption = 12345678
+
    it('random with default', done => {
       SymmetricKey.random().then(symmetricKey => {
          const cryptoKey = symmetricKey['cryptoKey']
@@ -26,4 +29,58 @@ describe('test symmetric key', () => {
             done()
          })
    })
+
+   it('encrypt string with default settings', done => {
+      SymmetricKey.random(new SymmetricKeyConfigBuilder()
+         .build())
+         .then(key => {
+            key.encrypt(helloWorldString).then(encrypted => {
+               expect(encrypted.decryptionParameters().name).toEqual(WebCryptoConfig.DEFAULT.symmetricKeyConfig.keyAlgorithm)
+               done()
+            })
+         })
+   })
+
+   it('decrypt string with default settings', done => {
+      SymmetricKey.random(new SymmetricKeyConfigBuilder()
+         .build())
+         .then(key => {
+            key.encrypt(helloWorldString).then(encrypted => {
+               encrypted.decrypt(key, String).then(decrypted => {
+                  expect(decrypted).toEqual(helloWorldString)
+                  done()
+               })
+            })
+         })
+   })
+
+   it('decrypt string with default settings without prototype', done => {
+      SymmetricKey.random(new SymmetricKeyConfigBuilder()
+         .build())
+         .then(key => {
+            key.encrypt(helloWorldString).then(encrypted => {
+               key.decrypt(encrypted.decryptionParameters(), encrypted['content'])
+                  .then(decrypted => {
+                     console.log('de: ', decrypted)
+                     expect(String.fromCharCode.apply(null, new Uint8Array(decrypted)))
+                        .toEqual(helloWorldString)
+                     done()
+                  })
+            })
+         })
+   })
+
+   it('decrypt number with default settings', done => {
+      SymmetricKey.random(new SymmetricKeyConfigBuilder()
+         .build())
+         .then(key => {
+            key.encrypt(numberForEncryption).then(encrypted => {
+               encrypted.decrypt(key, Number).then(decrypted => {
+                  expect(decrypted).toEqual(numberForEncryption)
+                  done()
+               })
+            })
+         })
+   })
+
 })

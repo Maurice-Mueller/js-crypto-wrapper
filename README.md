@@ -5,6 +5,20 @@
 
 a wrapper for WebCryptoAPI
 
+# Install
+
+**NOTE:** One test dependency needs node version 9.5.0 or *less* (currently, it will fail with
+node >=10.0.0). To quickly change between node versions have a look at
+[nvm](https://github.com/creationix/nvm/blob/master/README.md).
+
+```
+npm install @esentri/js-crypto-wrapper
+```
+
+```
+yarn add @esentri/js-crypto-wrapper
+```
+
 # Projects used
 
 * [webcrypto-liner](https://github.com/PeculiarVentures/webcrypto-liner)

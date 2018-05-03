@@ -1,6 +1,6 @@
 {
    "name": "@esentri/js-crypto-wrapper",
-   "version": "0.0.1",
+   "version": "0.1.0",
    "description": "a wrapper around WebCryptoAPI",
    "keywords": [],
    "main": "dist/crypto-wrapper.umd.js",
@@ -88,9 +88,9 @@
       "jest": "^22.0.2",
       "lint-staged": "^7.0.0",
       "lodash.camelcase": "^4.3.0",
-      "node-webcrypto-ossl": "^1.0.36",
-      "node-gyp": "3.6.2",
       "node": "9.5.0",
+      "node-gyp": "3.6.2",
+      "node-webcrypto-ossl": "^1.0.36",
       "prompt": "^1.0.0",
       "replace-in-file": "^3.0.0-beta.2",
       "rimraf": "^2.6.1",
@@ -109,5 +109,8 @@
       "typedoc": "^0.11.0",
       "typescript": "^2.8.3",
       "validate-commit-msg": "^2.12.2"
+   },
+   "dependencies": {
+      "@esentri/de-serializer": "^0.6.2"
    }
 }

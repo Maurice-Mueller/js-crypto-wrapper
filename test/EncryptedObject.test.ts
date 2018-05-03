@@ -1,37 +1,36 @@
 import {SymmetricKey} from '../src/SymmetricKey'
-import {SimpleEncryptable} from './mock/SimpleEncryptable'
-import {AnyToArrayBuffer} from '../src/content/AnyToArrayBuffer'
 import {ArrayBufferEqual} from './content/ArrayBufferFunctions'
+import {DeSerializeParameter, SerializedType, SimpleSerialize} from '@esentri/de-serializer'
+import {NestedTestClass, SimpleTestClass} from './mock/SimpleTestClass'
 
 describe('encrypted object test', () => {
 
+   const testClass = new SimpleTestClass(new NestedTestClass('hello world'))
+   const serializedTestClass = SimpleSerialize(testClass,
+      [DeSerializeParameter.WITH_FUNCTIONS],
+      SerializedType.ARRAY_BUFFER)
+
    it('decrypts simple', done => {
       SymmetricKey.random().then(symmetricKey => {
-         const simpleEncryptable = new SimpleEncryptable('hello world')
-         simpleEncryptable.encrypt(symmetricKey).then(encryptedObject => {
-            const expectedDecryptedArrayBuffer = AnyToArrayBuffer('hello world')
-            expect(ArrayBufferEqual(encryptedObject['content'], expectedDecryptedArrayBuffer))
-               .toBeFalsy()
+         symmetricKey.encrypt(testClass).then(encryptedObject => {
+            expect(ArrayBufferEqual(encryptedObject['content'], serializedTestClass)).toBeFalsy()
             encryptedObject.decrypt(symmetricKey).then(decryptedArrayBuffer => {
-               expect(ArrayBufferEqual(decryptedArrayBuffer, expectedDecryptedArrayBuffer))
-                  .toBeTruthy()
+               expect(ArrayBufferEqual(decryptedArrayBuffer, serializedTestClass)).toBeTruthy()
                done()
             })
          })
       })
    })
 
-   it('decrypts simple with key promise', done => {
-      let symmetricKeyPromise = SymmetricKey.random()
-      const simpleEncryptable = new SimpleEncryptable('hello world')
-      simpleEncryptable.encrypt(symmetricKeyPromise).then(encryptedObject => {
-         const expectedDecryptedArrayBuffer = AnyToArrayBuffer('hello world')
-         expect(ArrayBufferEqual(encryptedObject['content'], expectedDecryptedArrayBuffer))
-            .toBeFalsy()
-         encryptedObject.decrypt(symmetricKeyPromise).then(decryptedArrayBuffer => {
-            expect(ArrayBufferEqual(decryptedArrayBuffer, expectedDecryptedArrayBuffer))
-               .toBeTruthy()
-            done()
+   it('decrypt to object', done => {
+      SymmetricKey.random().then(symmetricKey => {
+         symmetricKey.encrypt(testClass).then(encryptedObject => {
+            expect(ArrayBufferEqual(encryptedObject['content'], serializedTestClass)).toBeFalsy()
+            encryptedObject.decrypt(symmetricKey, SimpleTestClass)
+               .then((simpleTestClass: SimpleTestClass) => {
+                  expect(simpleTestClass.getField()).toBe('hello world')
+                  done()
+               })
          })
       })
    })

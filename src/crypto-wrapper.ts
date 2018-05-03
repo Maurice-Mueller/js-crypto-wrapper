@@ -2,7 +2,6 @@ export {KeyPair} from './KeyPair'
 export {SymmetricKey} from './SymmetricKey'
 export {PrivateKey} from './PrivateKey'
 export {PublicKey} from './PublicKey'
-export {Encryptable} from './Encryptable'
 export {EncryptedObject} from './EncryptedObject'
 export {InitializationVector} from './InitializationVector'
 
