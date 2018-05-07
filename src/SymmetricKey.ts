@@ -15,15 +15,16 @@ export class SymmetricKey {
    public encrypt (encryptee: any,
                    parameters: Array<DeSerializeParameter> = [DeSerializeParameter.WITH_FUNCTIONS])
       : Promise<EncryptedObject> {
-      let vector = InitializationVector.random()
-      encryptee = SimpleSerialize(encryptee, parameters, SerializedType.ARRAY_BUFFER)
-      return window.crypto.subtle.encrypt(
-         {name: this.cryptoKey.algorithm.name!, iv: vector.asArray()},
-         this.cryptoKey,
-         encryptee)
-         .then(encryptedData => {
-            return new EncryptedObject(encryptedData, this.cryptoKey.algorithm, vector)
-         }) as Promise<EncryptedObject>
+      return SimpleSerialize(encryptee, parameters, SerializedType.ARRAY_BUFFER).then(encryptee => {
+         let vector = InitializationVector.random()
+         return window.crypto.subtle.encrypt(
+            {name: this.cryptoKey.algorithm.name!, iv: vector.asArray()},
+            this.cryptoKey,
+            encryptee)
+            .then(encryptedData => {
+               return new EncryptedObject(encryptedData, this.cryptoKey.algorithm, vector)
+            }) as Promise<EncryptedObject>
+      })
    }
 
    public decrypt (decryptionParameters: any, content: ArrayBuffer, prototype: any = null)
