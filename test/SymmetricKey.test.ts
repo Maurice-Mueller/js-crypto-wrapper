@@ -3,6 +3,10 @@ import {WebCryptoConfig} from '../src/config/WebCryptoConfig'
 import {extractable} from './CryptoKeyAssertions'
 import {SymmetricKeyConfigBuilder} from '../src/config/SymmetricKeyConfig'
 import {KeyAlgorithm} from '../src/config/KeyAlgorithm'
+import {symKeyBase64} from './testData/Keys'
+import {Base64ToArrayBuffer} from '@esentri/transformer-functions'
+import {Array1000Byte, Array100Byte} from './testData/ArraysForEncryption'
+import {ArrayBufferEqual} from './content/ArrayBufferFunctions'
 
 describe('test symmetric key', () => {
 
@@ -54,6 +58,32 @@ describe('test symmetric key', () => {
          })
    })
 
+   it('decrypt string with decryption params from symmetric key', done => {
+      SymmetricKey.random(new SymmetricKeyConfigBuilder()
+         .build())
+         .then(key => {
+            key.encrypt(helloWorldString).then(encrypted => {
+               key.decrypt(key.decryptionParameters(encrypted['vector']), encrypted['content'], String).then(decrypted => {
+                  expect(decrypted).toEqual(helloWorldString)
+                  done()
+               })
+            })
+         })
+   })
+
+   it('decrypt string with decryption params from symmetric key and Uint8Array', done => {
+      SymmetricKey.random(new SymmetricKeyConfigBuilder()
+         .build())
+         .then(key => {
+            key.encrypt(helloWorldString).then(encrypted => {
+               key.decrypt(key.decryptionParameters(encrypted['vector'].asArray()), encrypted['content'], String).then(decrypted => {
+                  expect(decrypted).toEqual(helloWorldString)
+                  done()
+               })
+            })
+         })
+   })
+
    it('decrypt string with default settings without prototype', done => {
       SymmetricKey.random(new SymmetricKeyConfigBuilder()
          .build())
@@ -61,7 +91,6 @@ describe('test symmetric key', () => {
             key.encrypt(helloWorldString).then(encrypted => {
                key.decrypt(encrypted.decryptionParameters(), encrypted['content'])
                   .then(decrypted => {
-                     console.log('de: ', decrypted)
                      expect(String.fromCharCode.apply(null, new Uint8Array(decrypted)))
                         .toEqual(helloWorldString)
                      done()
@@ -83,4 +112,78 @@ describe('test symmetric key', () => {
          })
    })
 
-})
+   it('export/import from/to hex string', done => {
+      SymmetricKey.fromBase64(symKeyBase64).then(symmetricKey => {
+         symmetricKey.extractKey().then(extracted => {
+            expect(extracted).toEqual(symKeyBase64)
+            done()
+         })
+      })
+   })
+
+   it('de/encrypt Uint8Array', done => {
+      const array = new Uint8Array([12, 13, 14])
+      SymmetricKey.random().then(key => {
+         key.encrypt(array).then(encrypted => {
+            key.decrypt(encrypted.decryptionParameters(), encrypted['content'])
+               .then(decrypted => {
+                  expect(new Uint8Array(decrypted)).toEqual(array)
+                  done()
+               })
+         })
+      })
+   })
+
+   it('decrypt real data', done => {
+      const symKeyBase64 = '+cDIq2RAm7ySzeUeJC3ICtIZD371yk5NtRoHSV9kfjo='
+      const vector = [41, 28, 48, 16, 144, 39, 183, 201, 167, 213, 103, 63, 206, 212, 84, 201]
+      const nameEncryptedBase64 = 'AhFbOUVRDHEZFc84LLY1Gz5fmO8Q1FkEFcheSf5ti0An172RwaEDo5togzqlAoDg/XU1DXtOjoU0v/d4LwRjKqvEUUetIaRSUR2tCb0tD08='
+      SymmetricKey.fromBase64(symKeyBase64).then(key => {
+         key.decrypt(key.decryptionParameters(new Uint8Array(vector)), Base64ToArrayBuffer(nameEncryptedBase64), String)
+            .then(decrypted => {
+               expect(decrypted).toEqual('01_2017-Java_aktuell-Philipp-Buchholz_Unleashing-Java-Security.pdf')
+               done()
+            })
+      })
+   })
+
+   it('en/decrypt large data (100 byte)', done => {
+      SymmetricKey.random(new SymmetricKeyConfigBuilder().length(128).build()).then(key => {
+         key.encrypt(Array100Byte).then(encryptedObject => {
+            expect(new Uint8Array(encryptedObject['content']).length).toBeGreaterThan(100)
+            key.decrypt(encryptedObject.decryptionParameters(), encryptedObject['content'])
+               .then(decrypted => {
+                  expect(ArrayBufferEqual(decrypted, Array100Byte.buffer as ArrayBuffer)).toBeTruthy()
+                  done()
+               })
+         })
+      })
+   })
+
+   // WARNING: THOSE TESTS MAY TAKE A LONG TIME
+   it('en/decrypt large data (1000 byte)', done => {
+      SymmetricKey.random().then(key => {
+         key.encrypt(Array1000Byte).then(encryptedObject => {
+            expect(new Uint8Array(encryptedObject['content']).length).toBeGreaterThan(1000)
+            key.decrypt(encryptedObject.decryptionParameters(), encryptedObject['content'])
+               .then(decrypted => {
+                  expect(ArrayBufferEqual(decrypted, Array1000Byte.buffer as ArrayBuffer)).toBeTruthy()
+                  done()
+               })
+         })
+      })
+      // })
+
+      // it('en/decrypt large data (10000 byte)', done => {
+      //    SymmetricKey.random().then(key => {
+      //       key.encrypt(Array10000Byte).then(encryptedObject => {
+      //          key.decrypt(encryptedObject.decryptionParameters(), encryptedObject['content'])
+      //             .then(decrypted => {
+      //                expect(ArrayBufferEqual(decrypted, Array10000Byte.buffer as ArrayBuffer)).toBeTruthy()
+      //                done()
+      //             })
+      //       })
+      //    })
+      // })
+   })
+

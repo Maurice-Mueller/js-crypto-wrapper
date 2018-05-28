@@ -1,7 +1,7 @@
 import {SymmetricKey} from '../src/SymmetricKey'
 import {ArrayBufferEqual} from './content/ArrayBufferFunctions'
 import {DeSerializeParameter, SerializedType, SimpleSerialize} from '@esentri/de-serializer'
-import {NestedTestClass, SimpleTestClass} from './mock/SimpleTestClass'
+import {NestedTestClass, SimpleTestClass} from './testData/SimpleTestClass'
 
 describe('encrypted object test', () => {
 

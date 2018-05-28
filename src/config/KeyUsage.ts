@@ -8,3 +8,11 @@ export class KeyUsage {
    public static readonly WRAP_KEY: string = 'wrapKey'
    public static readonly UNWRAP_KEY: string = 'unwrapKey'
 }
+
+export function FilterPrivateKeyUsage(usage: Array<string>): Array<string> {
+   return usage.filter(use => use === KeyUsage.UNWRAP_KEY || use === KeyUsage.DECRYPT)
+}
+
+export function FilterPublicKeyUsage(usage: Array<string>): Array<string> {
+   return usage.filter(use => use === KeyUsage.ENCRYPT || use === KeyUsage.WRAP_KEY)
+}
