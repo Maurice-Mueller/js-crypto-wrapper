@@ -2,13 +2,14 @@ import {EncryptedObjectSerialize} from '../../src/de-serializer/EncryptedObjectS
 import {TestEncryptedObject} from '../testData/EncryptedObject'
 import {ArrayBufferEqual} from '../content/ArrayBufferFunctions'
 import {EncryptedObjectDeserialize} from '../../src/de-serializer/EncryptedObjectDeserialize'
+import {ArrayBufferToBase64} from '@esentri/transformer-functions'
 
 describe('encrypted object de-serializing', () => {
    it('serialize', done => {
       EncryptedObjectSerialize(TestEncryptedObject).then(serialized => {
          expect(serialized.keyParams).toEqual(TestEncryptedObject['keyParams'])
          expect(serialized.vector).toEqual(TestEncryptedObject['vector']['vector'])
-         expect(ArrayBufferEqual(serialized.content, TestEncryptedObject['content'])).toBeTruthy()
+         expect(serialized.content).toEqual(ArrayBufferToBase64(TestEncryptedObject['content']))
          done()
       })
    })

@@ -72,8 +72,7 @@ describe('test symmetric key', () => {
    })
 
    it('decrypt string with decryption params from symmetric key and Uint8Array', done => {
-      SymmetricKey.random(new SymmetricKeyConfigBuilder()
-         .build())
+      SymmetricKey.random(new SymmetricKeyConfigBuilder().build())
          .then(key => {
             key.encrypt(helloWorldString).then(encrypted => {
                key.decrypt(key.decryptionParameters(encrypted['vector'].asArray()), encrypted['content'], String).then(decrypted => {
@@ -85,8 +84,7 @@ describe('test symmetric key', () => {
    })
 
    it('decrypt string with default settings without prototype', done => {
-      SymmetricKey.random(new SymmetricKeyConfigBuilder()
-         .build())
+      SymmetricKey.random(new SymmetricKeyConfigBuilder().build())
          .then(key => {
             key.encrypt(helloWorldString).then(encrypted => {
                key.decrypt(encrypted.decryptionParameters(), encrypted['content'])
@@ -100,8 +98,7 @@ describe('test symmetric key', () => {
    })
 
    it('decrypt number with default settings', done => {
-      SymmetricKey.random(new SymmetricKeyConfigBuilder()
-         .build())
+      SymmetricKey.random(new SymmetricKeyConfigBuilder().build())
          .then(key => {
             key.encrypt(numberForEncryption).then(encrypted => {
                encrypted.decrypt(key, Number).then(decrypted => {
@@ -112,8 +109,17 @@ describe('test symmetric key', () => {
          })
    })
 
-   it('export/import from/to hex string', done => {
+   it('export/import from/to base64 string', done => {
       SymmetricKey.fromBase64(symKeyBase64).then(symmetricKey => {
+         symmetricKey.extractKey().then(extracted => {
+            expect(extracted).toEqual(symKeyBase64)
+            done()
+         })
+      })
+   })
+
+   it('import from raw', done => {
+      SymmetricKey.fromRaw(Base64ToArrayBuffer(symKeyBase64)).then(symmetricKey => {
          symmetricKey.extractKey().then(extracted => {
             expect(extracted).toEqual(symKeyBase64)
             done()
@@ -131,19 +137,6 @@ describe('test symmetric key', () => {
                   done()
                })
          })
-      })
-   })
-
-   it('decrypt real data', done => {
-      const symKeyBase64 = '+cDIq2RAm7ySzeUeJC3ICtIZD371yk5NtRoHSV9kfjo='
-      const vector = [41, 28, 48, 16, 144, 39, 183, 201, 167, 213, 103, 63, 206, 212, 84, 201]
-      const nameEncryptedBase64 = 'AhFbOUVRDHEZFc84LLY1Gz5fmO8Q1FkEFcheSf5ti0An172RwaEDo5togzqlAoDg/XU1DXtOjoU0v/d4LwRjKqvEUUetIaRSUR2tCb0tD08='
-      SymmetricKey.fromBase64(symKeyBase64).then(key => {
-         key.decrypt(key.decryptionParameters(new Uint8Array(vector)), Base64ToArrayBuffer(nameEncryptedBase64), String)
-            .then(decrypted => {
-               expect(decrypted).toEqual('01_2017-Java_aktuell-Philipp-Buchholz_Unleashing-Java-Security.pdf')
-               done()
-            })
       })
    })
 
@@ -172,18 +165,18 @@ describe('test symmetric key', () => {
                })
          })
       })
-      // })
-
-      // it('en/decrypt large data (10000 byte)', done => {
-      //    SymmetricKey.random().then(key => {
-      //       key.encrypt(Array10000Byte).then(encryptedObject => {
-      //          key.decrypt(encryptedObject.decryptionParameters(), encryptedObject['content'])
-      //             .then(decrypted => {
-      //                expect(ArrayBufferEqual(decrypted, Array10000Byte.buffer as ArrayBuffer)).toBeTruthy()
-      //                done()
-      //             })
-      //       })
-      //    })
-      // })
    })
+
+   // it('en/decrypt large data (10000 byte)', done => {
+   //    SymmetricKey.random().then(key => {
+   //       key.encrypt(Array10000Byte).then(encryptedObject => {
+   //          key.decrypt(encryptedObject.decryptionParameters(), encryptedObject['content'])
+   //             .then(decrypted => {
+   //                expect(ArrayBufferEqual(decrypted, Array10000Byte.buffer as ArrayBuffer)).toBeTruthy()
+   //                done()
+   //             })
+   //       })
+   //    })
+   // })
+})
 

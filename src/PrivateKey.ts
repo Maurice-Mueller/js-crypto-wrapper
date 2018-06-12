@@ -1,4 +1,4 @@
-import {ArrayBufferToBase64, Base64ToArrayBuffer} from '@esentri/transformer-functions'
+import {ArrayBufferToBase64, ArrayBufferToString, Base64ToArrayBuffer} from '@esentri/transformer-functions'
 import {KeyPairConfig, KeyPairConfigBuilder} from './config/KeyPairConfig'
 import {SymmetricKey} from './SymmetricKey'
 import {SymmetricKeyConfig} from './crypto-wrapper'
