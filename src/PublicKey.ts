@@ -20,7 +20,7 @@ export class PublicKey {
    public keyConfig(): KeyPairConfig {
       return new KeyPairConfigBuilder()
          .keyUsage(this.key.usages)
-         .keyAlgorithm(this.key.algorithm.name)
+         .keyAlgorithm(this.key.algorithm.name!)
          .extractable(this.key.extractable)
          .build()
    }
@@ -30,7 +30,7 @@ export class PublicKey {
          .wrapKey('raw',
             symmetricKey['cryptoKey'],
             this.key,
-            this.key.algorithm.name)
+            this.key.algorithm.name!)
          .then(rawKey =>
             new WrappedKey(ArrayBufferToBase64(rawKey), symmetricKey.keyConfig())) as Promise<WrappedKey>
    }

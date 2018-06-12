@@ -1,7 +1,7 @@
-import {ArrayBufferToBase64, ArrayBufferToString, Base64ToArrayBuffer} from '@esentri/transformer-functions'
+import {ArrayBufferToBase64, Base64ToArrayBuffer} from '@esentri/transformer-functions'
 import {KeyPairConfig, KeyPairConfigBuilder} from './config/KeyPairConfig'
 import {SymmetricKey} from './SymmetricKey'
-import {SymmetricKeyConfig} from './crypto-wrapper'
+import {SymmetricKeyConfig} from './config/SymmetricKeyConfig'
 import {FilterPrivateKeyUsage} from './config/KeyUsage'
 
 export class PrivateKey {
@@ -20,7 +20,7 @@ export class PrivateKey {
    public keyConfig(): KeyPairConfig {
       return new KeyPairConfigBuilder()
          .keyUsage(this.key.usages)
-         .keyAlgorithm(this.key.algorithm.name)
+         .keyAlgorithm(this.key.algorithm.name!)
          .extractable(this.key.extractable)
          .build()
    }
@@ -30,7 +30,7 @@ export class PrivateKey {
       return window.crypto.subtle.unwrapKey('raw',
          Base64ToArrayBuffer(base64),
          this.key,
-         this.key.algorithm.name,
+         this.key.algorithm.name!,
          config.keyAlgorithm,
          config.extractable,
          config.keyUsage)

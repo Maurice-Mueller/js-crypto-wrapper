@@ -1,5 +1,6 @@
 import {Deserialize} from '@esentri/de-serializer'
-import {EncryptedObject, InitializationVector} from '../crypto-wrapper'
+import {EncryptedObject} from '../EncryptedObject'
+import {InitializationVector} from '../InitializationVector'
 import {Base64ToArrayBuffer} from '@esentri/transformer-functions'
 
 export const EncryptedObjectDeserialize: Deserialize<EncryptedObject> =

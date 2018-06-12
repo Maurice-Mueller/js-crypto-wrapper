@@ -48,7 +48,7 @@ export class SymmetricKey {
 
    public keyConfig (): SymmetricKeyConfig {
       return new SymmetricKeyConfigBuilder()
-         .keyAlgorithm(this.cryptoKey.algorithm.name)
+         .keyAlgorithm(this.cryptoKey.algorithm.name!)
          .extractable(this.cryptoKey.extractable)
          .keyUsage(this.cryptoKey.usages)
          .length((this.cryptoKey.algorithm as any)['length'])
