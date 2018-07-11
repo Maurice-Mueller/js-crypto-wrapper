@@ -7,11 +7,13 @@ import {symKeyBase64} from './testData/Keys'
 import {Base64ToArrayBuffer} from '@esentri/transformer-functions'
 import {Array1000Byte, Array100Byte} from './testData/ArraysForEncryption'
 import {ArrayBufferEqual} from './content/ArrayBufferFunctions'
+import fs from 'fs'
 
 describe('test symmetric key', () => {
 
    const helloWorldString = 'hello world'
    const numberForEncryption = 12345678
+   let arrayBufferForEncryption = new Uint8Array(fs.readFileSync(__dirname + '/testData/text.txt')).buffer
 
    it('random with default', done => {
       SymmetricKey.random().then(symmetricKey => {
@@ -178,5 +180,18 @@ describe('test symmetric key', () => {
    //       })
    //    })
    // })
+
+   it('decrypt base64 file with default settings', done => {
+      SymmetricKey.random(new SymmetricKeyConfigBuilder()
+         .build())
+         .then(key => {
+            key.encrypt(arrayBufferForEncryption).then(encrypted => {
+               encrypted.decrypt(key, ArrayBuffer).then(decrypted => {
+                  expect(ArrayBufferEqual(decrypted, arrayBufferForEncryption)).toBeTruthy()
+                  done()
+               })
+            })
+         })
+   })
 })
 
