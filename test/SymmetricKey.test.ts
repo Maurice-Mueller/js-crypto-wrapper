@@ -4,7 +4,7 @@ import {extractable} from './CryptoKeyAssertions'
 import {SymmetricKeyConfigBuilder} from '../src/config/SymmetricKeyConfig'
 import {KeyAlgorithm} from '../src/config/KeyAlgorithm'
 import {symKeyBase64} from './testData/Keys'
-import {Base64ToArrayBuffer} from '@esentri/transformer-functions'
+import {ArrayBufferToBase64, ArrayBufferToString, Base64ToArrayBuffer} from '@esentri/transformer-functions'
 import {Array1000Byte, Array100Byte} from './testData/ArraysForEncryption'
 import {ArrayBufferEqual} from './content/ArrayBufferFunctions'
 import fs from 'fs'
@@ -14,6 +14,7 @@ describe('test symmetric key', () => {
    const helloWorldString = 'hello world'
    const numberForEncryption = 12345678
    let arrayBufferForEncryption = new Uint8Array(fs.readFileSync(__dirname + '/testData/text.txt')).buffer
+   let base64ForEncryption = ArrayBufferToBase64(arrayBufferForEncryption)
 
    it('random with default', done => {
       SymmetricKey.random().then(symmetricKey => {
@@ -185,9 +186,10 @@ describe('test symmetric key', () => {
       SymmetricKey.random(new SymmetricKeyConfigBuilder()
          .build())
          .then(key => {
-            key.encrypt(arrayBufferForEncryption).then(encrypted => {
+            console.debug(arrayBufferForEncryption)
+            key.encrypt(Base64ToArrayBuffer(base64ForEncryption)).then(encrypted => {
                encrypted.decrypt(key, ArrayBuffer).then(decrypted => {
-                  expect(ArrayBufferEqual(decrypted, arrayBufferForEncryption)).toBeTruthy()
+                  expect(decrypted).toEqual(Base64ToArrayBuffer(base64ForEncryption))
                   done()
                })
             })
