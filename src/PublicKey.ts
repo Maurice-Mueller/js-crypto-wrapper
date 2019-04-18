@@ -1,4 +1,8 @@
-import {ArrayBufferToBase64, Base64ToArrayBuffer} from '@esentri/transformer-functions'
+import {
+   ArrayBufferWithBinaryDataToBase64,
+   ArrayBufferWithBinaryDataToString,
+   Base64WithBinaryDataToArrayBuffer
+} from '@esentri/transformer-functions'
 import {KeyPairConfig, KeyPairConfigBuilder} from './config/KeyPairConfig'
 import {SymmetricKey} from './SymmetricKey'
 import {WrappedKey} from './WrappedKey'
@@ -13,11 +17,11 @@ export class PublicKey {
 
    public extractKey (): Promise<string> {
       return window.crypto.subtle.exportKey('spki', this.key).then(rawKey => {
-         return ArrayBufferToBase64(rawKey)
+         return ArrayBufferWithBinaryDataToBase64(rawKey)
       }) as Promise<string>
    }
 
-   public keyConfig(): KeyPairConfig {
+   public keyConfig (): KeyPairConfig {
       return new KeyPairConfigBuilder()
          .keyUsage(this.key.usages)
          .keyAlgorithm(this.key.algorithm.name!)
@@ -32,13 +36,13 @@ export class PublicKey {
             this.key,
             this.key.algorithm.name!)
          .then(rawKey =>
-            new WrappedKey(ArrayBufferToBase64(rawKey), symmetricKey.keyConfig())) as Promise<WrappedKey>
+            new WrappedKey(ArrayBufferWithBinaryDataToBase64(rawKey), symmetricKey.keyConfig())) as Promise<WrappedKey>
    }
 
-   public static fromBase64 (hexString: string, config = KeyPairConfig.DEFAULT): Promise<PublicKey> {
+   public static fromBase64 (base64: string, config = KeyPairConfig.DEFAULT): Promise<PublicKey> {
       return new Promise<PublicKey>(((resolve, reject) => {
          (window.crypto.subtle.importKey('spki',
-            Base64ToArrayBuffer(hexString),
+            Base64WithBinaryDataToArrayBuffer(base64),
             config.keyParams,
             config.extractable,
             FilterPublicKeyUsage(config.keyUsage)) as Promise<CryptoKey>)

@@ -4,7 +4,9 @@ import {extractable} from './CryptoKeyAssertions'
 import {SymmetricKeyConfigBuilder} from '../src/config/SymmetricKeyConfig'
 import {KeyAlgorithm} from '../src/config/KeyAlgorithm'
 import {symKeyBase64} from './testData/Keys'
-import {ArrayBufferToBase64, ArrayBufferToString, Base64ToArrayBuffer} from '@esentri/transformer-functions'
+import {
+   ArrayBufferWithBinaryDataToBase64, ArrayBufferWithBinaryDataToString, Base64WithBinaryDataToArrayBuffer
+} from '@esentri/transformer-functions'
 import {Array1000Byte, Array100Byte} from './testData/ArraysForEncryption'
 import {ArrayBufferEqual} from './content/ArrayBufferFunctions'
 import * as fs from 'fs'
@@ -14,7 +16,7 @@ describe('test symmetric key', () => {
    const helloWorldString = 'hello world'
    const numberForEncryption = 12345678
    let arrayBufferForEncryption = new Uint8Array(fs.readFileSync(__dirname + '/testData/text.txt')).buffer
-   let base64ForEncryption = ArrayBufferToBase64(arrayBufferForEncryption)
+   let base64ForEncryption = ArrayBufferWithBinaryDataToBase64(arrayBufferForEncryption)
 
    it('random with default', done => {
       SymmetricKey.random().then(symmetricKey => {
@@ -92,7 +94,7 @@ describe('test symmetric key', () => {
             key.encrypt(helloWorldString).then(encrypted => {
                key.decrypt(encrypted.decryptionParameters(), encrypted['content'])
                   .then(decrypted => {
-                     expect(ArrayBufferToString(new Uint8Array(decrypted)))
+                     expect(ArrayBufferWithBinaryDataToString(new Uint8Array(decrypted)))
                         .toEqual(helloWorldString)
                      done()
                   })
@@ -122,7 +124,7 @@ describe('test symmetric key', () => {
    })
 
    it('import from raw', done => {
-      SymmetricKey.fromRaw(Base64ToArrayBuffer(symKeyBase64)).then(symmetricKey => {
+      SymmetricKey.fromRaw(Base64WithBinaryDataToArrayBuffer(symKeyBase64)).then(symmetricKey => {
          symmetricKey.extractKey().then(extracted => {
             expect(extracted).toEqual(symKeyBase64)
             done()
@@ -187,9 +189,9 @@ describe('test symmetric key', () => {
          .build())
          .then(key => {
             console.debug(arrayBufferForEncryption)
-            key.encrypt(Base64ToArrayBuffer(base64ForEncryption)).then(encrypted => {
+            key.encrypt(Base64WithBinaryDataToArrayBuffer(base64ForEncryption)).then(encrypted => {
                encrypted.decrypt(key, ArrayBuffer).then(decrypted => {
-                  expect(decrypted).toEqual(Base64ToArrayBuffer(base64ForEncryption))
+                  expect(decrypted).toEqual(Base64WithBinaryDataToArrayBuffer(base64ForEncryption))
                   done()
                })
             })

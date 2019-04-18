@@ -3,7 +3,12 @@ import {WebCryptoConfig} from './config/WebCryptoConfig'
 import {EncryptedObject} from './EncryptedObject'
 import {InitializationVector} from './InitializationVector'
 import {DeSerializeParameter, DeSerializeParameterBuilder, SerializedType, SimpleDeserialize, SimpleSerialize} from '@esentri/de-serializer'
-import {ArrayBufferToBase64, Base64ToArrayBuffer} from '@esentri/transformer-functions'
+import {
+   ArrayBufferToBase64,
+   ArrayBufferWithBinaryDataToBase64,
+   Base64ToArrayBuffer,
+   Base64WithBinaryDataToArrayBuffer
+} from '@esentri/transformer-functions'
 
 export class SymmetricKey {
 
@@ -42,7 +47,7 @@ export class SymmetricKey {
 
    public extractKey (): Promise<string> {
       return window.crypto.subtle.exportKey('raw', this.cryptoKey).then(rawKey => {
-         return ArrayBufferToBase64(rawKey)
+         return ArrayBufferWithBinaryDataToBase64(rawKey)
       }) as Promise<string>
    }
 
@@ -62,7 +67,7 @@ export class SymmetricKey {
 
    public static fromBase64 (base64: string, config = SymmetricKeyConfig.DEFAULT)
       : Promise<SymmetricKey> {
-      return this.fromRaw(Base64ToArrayBuffer(base64), config)
+      return this.fromRaw(Base64WithBinaryDataToArrayBuffer(base64), config)
    }
 
    public static fromRaw (rawKey: ArrayBuffer, config = SymmetricKeyConfig.DEFAULT)

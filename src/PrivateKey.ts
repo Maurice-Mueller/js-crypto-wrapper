@@ -1,4 +1,4 @@
-import {ArrayBufferToBase64, Base64ToArrayBuffer} from '@esentri/transformer-functions'
+import {ArrayBufferWithBinaryDataToBase64, Base64WithBinaryDataToArrayBuffer} from '@esentri/transformer-functions'
 import {KeyPairConfig, KeyPairConfigBuilder} from './config/KeyPairConfig'
 import {SymmetricKey} from './SymmetricKey'
 import {SymmetricKeyConfig} from './config/SymmetricKeyConfig'
@@ -13,11 +13,11 @@ export class PrivateKey {
 
    public extractKey (): Promise<string> {
       return window.crypto.subtle.exportKey('pkcs8', this.key).then(rawKey => {
-         return ArrayBufferToBase64(rawKey)
+         return ArrayBufferWithBinaryDataToBase64(rawKey)
       }) as Promise<string>
    }
 
-   public keyConfig(): KeyPairConfig {
+   public keyConfig (): KeyPairConfig {
       return new KeyPairConfigBuilder()
          .keyUsage(this.key.usages)
          .keyAlgorithm(this.key.algorithm.name!)
@@ -28,7 +28,7 @@ export class PrivateKey {
    public unwrapKey (base64: string, config: SymmetricKeyConfig = SymmetricKeyConfig.DEFAULT)
       : Promise<SymmetricKey> {
       return window.crypto.subtle.unwrapKey('raw',
-         Base64ToArrayBuffer(base64),
+         Base64WithBinaryDataToArrayBuffer(base64),
          this.key,
          this.key.algorithm.name!,
          config.keyAlgorithm,
@@ -40,7 +40,7 @@ export class PrivateKey {
    public static fromBase64 (base64: string, config = KeyPairConfig.DEFAULT): Promise<PrivateKey> {
       return new Promise<PrivateKey>((resolve, reject) => {
          (window.crypto.subtle.importKey('pkcs8',
-            Base64ToArrayBuffer(base64),
+            Base64WithBinaryDataToArrayBuffer(base64),
             config.keyParams,
             config.extractable,
             FilterPrivateKeyUsage(config.keyUsage)) as Promise<CryptoKey>)
