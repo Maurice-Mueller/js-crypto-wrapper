@@ -7,7 +7,7 @@ import {symKeyBase64} from './testData/Keys'
 import {ArrayBufferToBase64, ArrayBufferToString, Base64ToArrayBuffer} from '@esentri/transformer-functions'
 import {Array1000Byte, Array100Byte} from './testData/ArraysForEncryption'
 import {ArrayBufferEqual} from './content/ArrayBufferFunctions'
-import fs from 'fs'
+import * as fs from 'fs'
 
 describe('test symmetric key', () => {
 
