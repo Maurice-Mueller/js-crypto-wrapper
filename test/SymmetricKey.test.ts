@@ -92,7 +92,7 @@ describe('test symmetric key', () => {
             key.encrypt(helloWorldString).then(encrypted => {
                key.decrypt(encrypted.decryptionParameters(), encrypted['content'])
                   .then(decrypted => {
-                     expect(String.fromCharCode.apply(null, new Uint8Array(decrypted)))
+                     expect(ArrayBufferToString(new Uint8Array(decrypted)))
                         .toEqual(helloWorldString)
                      done()
                   })
@@ -196,4 +196,3 @@ describe('test symmetric key', () => {
          })
    })
 })
-

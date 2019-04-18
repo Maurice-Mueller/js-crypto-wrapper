@@ -1,6 +1,6 @@
 {
    "name": "@esentri/js-crypto-wrapper",
-   "version": "0.4.3",
+   "version": "0.4.4",
    "description": "a wrapper around WebCryptoAPI",
    "keywords": [],
    "main": "dist/crypto-wrapper.umd.js",
@@ -46,6 +46,7 @@
       }
    },
    "jest": {
+      "testURL": "http://localhost/",
       "transform": {
          ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
       },
@@ -71,8 +72,7 @@
             "statements": 95
          }
       },
-      "collectCoverage": true,
-      "mapCoverage": true
+      "collectCoverage": true
    },
    "devDependencies": {
       "@types/jest": "^22.0.0",
@@ -107,11 +107,11 @@
       "tslint": "^5.8.0",
       "tslint-config-standard": "^7.0.0",
       "typedoc": "^0.11.0",
-      "typescript": "^2.8.3",
+      "typescript": "^3.4.0",
       "validate-commit-msg": "^2.12.2"
    },
    "dependencies": {
-      "@esentri/de-serializer": "^0.9.5",
-      "@esentri/transformer-functions": "^0.3.3"
+      "@esentri/de-serializer": "^0.9.6",
+      "@esentri/transformer-functions": "^0.3.5"
    }
 }
