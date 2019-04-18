@@ -37,15 +37,13 @@ export class KeyPairConfig {
    public static readonly DEFAULT: KeyPairConfig = new KeyPairConfig()
 }
 
-
 export class KeyPairConfigBuilder {
    private _keyAlgorithm: string = KeyAlgorithm.RSA_OAEP
    private _modulusLength: number = ModulusLength._2048
    private _publicExponent: Uint8Array = PublicExponent.DEFAULT
    private _hashAlgorithm: string = HashAlgorithm.SHA_512
    private _extractable: boolean = true
-   private _keyUsage: Array<string> = [KeyUsage.ENCRYPT, KeyUsage.DECRYPT, KeyUsage.WRAP_KEY,
-      KeyUsage.UNWRAP_KEY]
+   private _keyUsage: Array<string> = [KeyUsage.ENCRYPT, KeyUsage.DECRYPT]
 
    public keyAlgorithm (value: string): KeyPairConfigBuilder {
       this._keyAlgorithm = value

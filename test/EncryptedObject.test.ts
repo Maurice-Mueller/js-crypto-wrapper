@@ -1,14 +1,16 @@
 import {SymmetricKey} from '../src/SymmetricKey'
 import {ArrayBufferEqual} from './content/ArrayBufferFunctions'
-import {DeSerializeParameter, SerializedType, SimpleSerialize} from '@esentri/de-serializer'
-import {NestedTestClass, SimpleTestClass} from './mock/SimpleTestClass'
+import {SerializedType, SimpleSerialize, DeSerializeParameterBuilder} from '@esentri/de-serializer'
+import {NestedTestClass, SimpleTestClass} from './testData/SimpleTestClass'
 
 describe('encrypted object test', () => {
 
    const testClass = new SimpleTestClass(new NestedTestClass('hello world'))
    const serializedTestClassPromise = SimpleSerialize(testClass,
-      [DeSerializeParameter.WITH_FUNCTIONS],
-      SerializedType.ARRAY_BUFFER)
+      new DeSerializeParameterBuilder()
+         .serializedType(SerializedType.ARRAY_BUFFER)
+         .withFunctions(true)
+         .build())
 
    it('decrypts simple', done => {
       SymmetricKey.random().then(symmetricKey => {

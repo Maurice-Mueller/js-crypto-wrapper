@@ -20,7 +20,7 @@ export class SymmetricKeyConfig {
       this.keyParams = {name: this.keyAlgorithm, length: this.length}
    }
 
-   public static DEFAULT: SymmetricKeyConfig = new SymmetricKeyConfig()
+   public static readonly DEFAULT: SymmetricKeyConfig = new SymmetricKeyConfig()
 }
 
 export class SymmetricKeyConfigBuilder {
