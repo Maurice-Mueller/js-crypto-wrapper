@@ -12,7 +12,7 @@ export class SymmetricKeyConfig {
    constructor (keyAlgorithm: string = KeyAlgorithm.AES_CBC,
                 length: number = SymmetricKeyLength._256,
                 extractable: boolean = true,
-                keyUsage: Array<string> = [KeyUsage.ENCRYPT, KeyUsage.DECRYPT]) {
+                keyUsage: Array<string> = [KeyUsage.ENCRYPT, KeyUsage.DECRYPT, KeyUsage.WRAP_KEY, KeyUsage.UNWRAP_KEY]) {
       this.keyAlgorithm = keyAlgorithm
       this.length = length
       this.extractable = extractable

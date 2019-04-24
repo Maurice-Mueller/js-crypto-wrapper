@@ -9,4 +9,5 @@ export class KeyAlgorithm {
    public static readonly ECDH: string = 'ECDH'
    public static readonly DH: string = 'DH'
    public static readonly RSASSA_PKCS1_V1_5: string = 'RSASSA-PKCS1-v1_5'
+   public static readonly PBKDF2: string = 'PBKDF2'
 }

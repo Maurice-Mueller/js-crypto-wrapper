@@ -69,7 +69,7 @@ describe('test public key', () => {
       KeyPair.fromPrivatePublic(PrivateKeyBase64, publicKeyBase64).then(keyPair => {
          SymmetricKey.fromBase64(symKeyBase64).then(symKey => {
             keyPair.wrapKey(symKey).then(wrappedKey => {
-               keyPair.unwrapKey(wrappedKey).then(unwrappedKey => {
+               keyPair.unwrapSymmetricKey(wrappedKey).then(unwrappedKey => {
                   unwrappedKey.extractKey().then(extracted => {
                      expect(extracted).toEqual(symKeyBase64)
                      done()

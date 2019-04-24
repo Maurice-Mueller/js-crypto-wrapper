@@ -2,14 +2,16 @@ import {SymmetricKey} from '../src/SymmetricKey'
 import {WebCryptoConfig} from '../src/config/WebCryptoConfig'
 import {extractable} from './CryptoKeyAssertions'
 import {SymmetricKeyConfigBuilder} from '../src/config/SymmetricKeyConfig'
+import {SymmetricKeyDerivationConfigBuilder} from '../src/config/SymmetricKeyDerivationConfig'
 import {KeyAlgorithm} from '../src/config/KeyAlgorithm'
-import {symKeyBase64} from './testData/Keys'
+import {PrivateKeyBase64, publicKeyBase64, symKeyBase64} from './testData/Keys'
 import {
    ArrayBufferWithBinaryDataToBase64, ArrayBufferWithBinaryDataToString, Base64WithBinaryDataToArrayBuffer
 } from '@esentri/transformer-functions'
 import {Array1000Byte, Array100Byte} from './testData/ArraysForEncryption'
 import {ArrayBufferEqual} from './content/ArrayBufferFunctions'
 import * as fs from 'fs'
+import {PrivateKey, PublicKey} from '../src/crypto-wrapper'
 
 describe('test symmetric key', () => {
 
@@ -20,7 +22,7 @@ describe('test symmetric key', () => {
 
    it('random with default', done => {
       SymmetricKey.random().then(symmetricKey => {
-         const cryptoKey = symmetricKey['cryptoKey']
+         const cryptoKey = symmetricKey['key']
          expect(cryptoKey).toBeDefined()
          extractable(cryptoKey)
          expect(cryptoKey.algorithm).toBe(WebCryptoConfig.DEFAULT.symmetricKeyConfig.keyParams)
@@ -34,7 +36,7 @@ describe('test symmetric key', () => {
          .keyAlgorithm(KeyAlgorithm.AES_CTR)
          .build())
          .then(key => {
-            expect(key['cryptoKey'].algorithm.name).toEqual(KeyAlgorithm.AES_CTR)
+            expect(key['key'].algorithm.name).toEqual(KeyAlgorithm.AES_CTR)
             done()
          })
    })
@@ -197,4 +199,119 @@ describe('test symmetric key', () => {
             })
          })
    })
+
+   it('derive a key from a password (with default salt + config)', done => {
+      let password = 'test-pw'
+      SymmetricKey.fromPassword(password)
+         .then(symmetricKey => symmetricKey.extractKey())
+         .then(extracted => {
+            expect(extracted).toEqual('ehaoqvWlCh7nCG4LEtEihwawq2x+iaetxyfbNO4gCgI=')
+            done()
+         })
+   })
+
+   it('derive a key from a password (with default config)', done => {
+      let password = 'test-pw'
+      let salt = 'salt'
+      SymmetricKey.fromPassword(password, salt)
+         .then(symmetricKey => symmetricKey.extractKey())
+         .then(extracted => {
+            expect(extracted).toEqual('IdNcf7yLYfQ6of3eV3t5nZfKwdwmo0Hc0r/ejn6U6Ak=')
+            done()
+         })
+   })
+
+   it('derive a key from a password (with custom config)', done => {
+      let password = 'test-pw'
+      let salt = 'salt'
+      SymmetricKey.fromPassword(password, salt, new SymmetricKeyDerivationConfigBuilder()
+         .iterationsForDerivation(10).build())
+         .then(symmetricKey => symmetricKey.extractKey())
+         .then(extracted => {
+            expect(extracted).toEqual('jdGGK6evbbnYUX9ISt60FywXsScBD5gMrgd+fM4yqj4=')
+            done()
+         })
+   })
+
+   it('derive two keys from different passwords', done => {
+      let password1 = 'test-pw1'
+      let password2 = 'test-pw2'
+      let salt = 'salt'
+      SymmetricKey.fromPassword(password1, salt)
+         .then(symmetricKey1 => symmetricKey1.extractKey())
+         .then(extracted1 => {
+            SymmetricKey.fromPassword(password2, salt).then(symmetricKey2 => {
+               symmetricKey2.extractKey().then(extracted2 => {
+                  expect(extracted1).not.toEqual(extracted2)
+                  done()
+               })
+            })
+         })
+   })
+
+   it('derive two keys from different salts', done => {
+      let password = 'test-pw'
+      let salt1 = 'salt1'
+      let salt2 = 'salt2'
+      SymmetricKey.fromPassword(password, salt1)
+         .then(symmetricKey1 => symmetricKey1.extractKey())
+         .then(extracted1 => {
+            SymmetricKey.fromPassword(password, salt2).then(symmetricKey2 => {
+               symmetricKey2.extractKey().then(extracted2 => {
+                  expect(extracted1).not.toEqual(extracted2)
+                  done()
+               })
+            })
+         })
+   })
+
+   it('(un)wrap private key', done => {
+      PrivateKey.fromBase64(PrivateKeyBase64).then(privateKey => {
+         SymmetricKey.random().then(symKey => {
+            symKey.wrapKey(privateKey).then(wrappedKey => {
+               symKey.unwrapPrivateKey(wrappedKey.base64, wrappedKey.vector!)
+                  .then(unwrappedPrivateKey => {
+                     unwrappedPrivateKey.extractKey().then(extractedUnwrapped => {
+                        expect(extractedUnwrapped).toEqual(PrivateKeyBase64)
+                        done()
+                     })
+                  })
+            })
+         })
+      })
+
+   })
+
+   it('(un)wrap public key', done => {
+      PublicKey.fromBase64(publicKeyBase64).then(publicKey => {
+         SymmetricKey.random().then(symKey => {
+            symKey.wrapKey(publicKey).then(wrappedKey => {
+               symKey.unwrapPublicKey(wrappedKey.base64, wrappedKey.vector!)
+                  .then(unwrappedPublicKey => {
+                     unwrappedPublicKey.extractKey().then(extractedUnwrapped => {
+                        expect(extractedUnwrapped).toEqual(publicKeyBase64)
+                        done()
+                     })
+                  })
+            })
+         })
+      })
+   })
+
+   it('(un)wrap symmetric key', done => {
+      SymmetricKey.fromBase64(symKeyBase64).then(symKeyForWrapping => {
+         SymmetricKey.random().then(symKey => {
+            symKey.wrapKey(symKeyForWrapping).then(wrappedKey => {
+               symKey.unwrapSymmetricKey(wrappedKey.base64, wrappedKey.vector!)
+                  .then(unwrappedSymKey => {
+                     unwrappedSymKey.extractKey().then(extractedUnwrapped => {
+                        expect(extractedUnwrapped).toEqual(symKeyBase64)
+                        done()
+                     })
+                  })
+            })
+         })
+      })
+   })
+
 })

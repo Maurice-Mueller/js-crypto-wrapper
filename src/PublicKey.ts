@@ -1,11 +1,8 @@
 import {
    ArrayBufferWithBinaryDataToBase64,
-   ArrayBufferWithBinaryDataToString,
    Base64WithBinaryDataToArrayBuffer
 } from '@esentri/transformer-functions'
-import {KeyPairConfig, KeyPairConfigBuilder} from './config/KeyPairConfig'
-import {SymmetricKey} from './SymmetricKey'
-import {WrappedKey} from './WrappedKey'
+import {WrappedKey, SymmetricKey, KeyPairConfig, KeyPairConfigBuilder} from './crypto-wrapper'
 import {FilterPublicKeyUsage} from './config/KeyUsage'
 
 export class PublicKey {
@@ -29,14 +26,14 @@ export class PublicKey {
          .build()
    }
 
-   public wrapKey (symmetricKey: SymmetricKey): Promise<WrappedKey> {
+   public wrapKey (key: SymmetricKey): Promise<WrappedKey> {
       return window.crypto.subtle
          .wrapKey('raw',
-            symmetricKey['cryptoKey'],
+            key['key'],
             this.key,
             this.key.algorithm.name!)
          .then(rawKey =>
-            new WrappedKey(ArrayBufferWithBinaryDataToBase64(rawKey), symmetricKey.keyConfig())) as Promise<WrappedKey>
+            new WrappedKey(ArrayBufferWithBinaryDataToBase64(rawKey), key.keyConfig())) as Promise<WrappedKey>
    }
 
    public static fromBase64 (base64: string, config = KeyPairConfig.DEFAULT): Promise<PublicKey> {

@@ -1,10 +1,5 @@
-import {PublicKey} from './PublicKey'
-import {PrivateKey} from './PrivateKey'
-import {KeyPairConfig} from './config/KeyPairConfig'
-import {WebCryptoConfig} from './config/WebCryptoConfig'
+import {PublicKey, PrivateKey, KeyPairConfig, WebCryptoConfig, SymmetricKey, WrappedKey} from './crypto-wrapper'
 import {KeyPairExtracted} from './KeyPairExtracted'
-import {SymmetricKey} from './SymmetricKey'
-import {WrappedKey} from './WrappedKey'
 
 export class KeyPair {
    private readonly publicKey: PublicKey
@@ -36,8 +31,8 @@ export class KeyPair {
       return this.publicKey.wrapKey(symmetricKey)
    }
 
-   public unwrapKey (wrappedKey: WrappedKey): Promise<SymmetricKey> {
-      return this.privateKey.unwrapKey(wrappedKey.base64, wrappedKey.config)
+   public unwrapSymmetricKey (wrappedKey: WrappedKey): Promise<SymmetricKey> {
+      return this.privateKey.unwrapSymmetricKey(wrappedKey.base64, wrappedKey.config)
    }
 
    public static random (config: KeyPairConfig = WebCryptoConfig.DEFAULT.keyPairConfig)

@@ -1,5 +1,5 @@
-import {PublicKey, KeyPair, SymmetricKey} from '../src/crypto-wrapper'
-import {publicKeyBase64, symKeyBase64} from './testData/Keys'
+import {PublicKey, KeyPair, SymmetricKey, PrivateKey} from '../src/crypto-wrapper'
+import {PrivateKeyBase64, publicKeyBase64, symKeyBase64} from './testData/Keys'
 
 describe('public key', () => {
    it('import/export from/to base64 string', done => {
@@ -15,8 +15,6 @@ describe('public key', () => {
       PublicKey.fromBase64(publicKeyBase64).then(publicKey => {
          SymmetricKey.fromBase64(symKeyBase64).then(symKey => {
             publicKey.wrapKey(symKey).then(wrappedKey => {
-               console.log('here wrap')
-               console.log(wrappedKey.base64)
                done()
             })
          })
