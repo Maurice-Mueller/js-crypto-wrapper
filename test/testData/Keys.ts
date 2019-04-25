@@ -5,4 +5,3 @@ export const publicKeyBase64 = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA52n/
 export const keyPairExtracted = new KeyPairExtracted(publicKeyBase64, PrivateKeyBase64)
 export const symKeyBase64 = 'qOZueO5Jvzv1lP+8uWDCdNLusWXbCpDOKOjOxvCcRHE='
 export const WrappedDefaultSymKeyBase64 = 'aMWQgYkhr8CoAdvpeKfNdFNom5AEKSFpOKVhAOqHCElI7RulkskBAQ2sNVlXsf+j072dRMlm8cqXSm3RIuqjdqvCgVTDMoBoLr2g/WS2Bn3Q01oKacqCBDvmudbYx18MTnNSprUpSrcKgbAI4zBoVw1JFq4KC8+Fo4xKnamBT/n3XA0CJLORUEnfPqYC7vfjOEwr2Q9ENksv0/L5Qm8ZNqLC96j5T/AmB9rwWb4vDzjbjpYlFxDGAxPI1VfN86c7Qfinnf3zDV+KURdeSl1dwo+vJeAlIXg/ffIi+YPD+azGLOB5ect1e8qP54Q+F3qX6jdFuFXUBPcvdtOwJ3wgaA=='
-

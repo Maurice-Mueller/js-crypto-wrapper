@@ -1,6 +1,6 @@
 {
    "name": "@esentri/js-crypto-wrapper",
-   "version": "0.6.0",
+   "version": "0.6.1",
    "description": "a wrapper around WebCryptoAPI",
    "keywords": [],
    "main": "dist/crypto-wrapper.umd.js",
@@ -112,6 +112,6 @@
    },
    "dependencies": {
       "@esentri/de-serializer": "^0.9.8",
-      "@esentri/transformer-functions": "^0.5.0"
+      "@esentri/transformer-functions": "^0.6.0"
    }
 }
