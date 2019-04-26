@@ -27,7 +27,7 @@ export class SymmetricKeyConfigBuilder {
    private _keyAlgorithm: string = KeyAlgorithm.AES_CBC
    private _length: number = SymmetricKeyLength._256
    private _extractable: boolean = true
-   private _keyUsage: Array<string> = [KeyUsage.ENCRYPT, KeyUsage.DECRYPT]
+   private _keyUsage: Array<string> = [KeyUsage.ENCRYPT, KeyUsage.DECRYPT, KeyUsage.WRAP_KEY, KeyUsage.UNWRAP_KEY]
 
    public keyAlgorithm (value: string): SymmetricKeyConfigBuilder {
       this._keyAlgorithm = value

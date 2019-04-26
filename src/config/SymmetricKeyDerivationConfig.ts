@@ -18,7 +18,7 @@ export class SymmetricKeyDerivationConfig {
                 keyLengthResultingKey: number = SymmetricKeyLength._256,
                 iterationsForDerivation: number = 1000,
                 extractableResultingKey: boolean = true,
-                keyUsageResultingKey: Array<string> = [KeyUsage.ENCRYPT, KeyUsage.DECRYPT],
+                keyUsageResultingKey: Array<string> = [KeyUsage.ENCRYPT, KeyUsage.DECRYPT, KeyUsage.WRAP_KEY, KeyUsage.UNWRAP_KEY],
                 hashFunction: string = HashAlgorithm.SHA_256) {
       this.keyAlgorithmDerivation = keyAlgorithmDerivation
       this.keyAlgorithmResultingKey = keyAlgorithmResultingKey
@@ -38,7 +38,7 @@ export class SymmetricKeyDerivationConfigBuilder {
    private _keyAlgorithmResultingKey: string = KeyAlgorithm.AES_CBC
    private _keyLengthResultingKey: number = SymmetricKeyLength._256
    private _extractableResultingKey: boolean = true
-   private _keyUsageResultingKey: Array<string> = [KeyUsage.ENCRYPT, KeyUsage.DECRYPT]
+   private _keyUsageResultingKey: Array<string> = [KeyUsage.ENCRYPT, KeyUsage.DECRYPT, KeyUsage.WRAP_KEY, KeyUsage.UNWRAP_KEY]
    private _iterationsForDerivation: number = 1000
    private _hashFunction: string = HashAlgorithm.SHA_256
 

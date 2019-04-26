@@ -282,6 +282,25 @@ describe('test symmetric key', () => {
 
    })
 
+   it('(un)wrap private key with sym key from password', done => {
+      let password = 'test-pw'
+      let salt = 'salt'
+      SymmetricKey.fromPassword(password, salt).then(symKey => {
+         PrivateKey.fromBase64(PrivateKeyBase64).then(privateKey => {
+            symKey.wrapKey(privateKey).then(wrappedKey => {
+               symKey.unwrapPrivateKey(wrappedKey.base64, wrappedKey.vector!)
+                  .then(unwrappedPrivateKey => {
+                     unwrappedPrivateKey.extractKey().then(extractedUnwrapped => {
+                        expect(extractedUnwrapped).toEqual(PrivateKeyBase64)
+                        done()
+                     })
+                  })
+            })
+         })
+      })
+
+   })
+
    it('(un)wrap public key', done => {
       PublicKey.fromBase64(publicKeyBase64).then(publicKey => {
          SymmetricKey.random().then(symKey => {
