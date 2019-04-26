@@ -8,7 +8,7 @@ describe('de-serialize WrappedKey', () => {
       let wrappedKey = new WrappedKey(symKeyBase64, SymmetricKeyConfig.DEFAULT)
       WrappedKeySerialize(wrappedKey).then(serializedWrappedKey => {
          expect(serializedWrappedKey.base64).toEqual(wrappedKey.base64)
-         expect(serializedWrappedKey.config).toEqual(wrappedKey.config)
+         expect(serializedWrappedKey.config).toEqual(JSON.stringify(wrappedKey.config))
          expect(serializedWrappedKey.vectorBase64).toBeNull()
          WrappedKeyDeserialize(serializedWrappedKey).then(deserializedKey => {
             expect(deserializedKey.base64).toEqual(wrappedKey.base64)
@@ -23,7 +23,7 @@ describe('de-serialize WrappedKey', () => {
       let wrappedKey = new WrappedKey(symKeyBase64, SymmetricKeyConfig.DEFAULT, InitializationVector.random())
       WrappedKeySerialize(wrappedKey).then(serializedWrappedKey => {
          expect(serializedWrappedKey.base64).toEqual(wrappedKey.base64)
-         expect(serializedWrappedKey.config).toEqual(wrappedKey.config)
+         expect(serializedWrappedKey.config).toEqual(JSON.stringify(wrappedKey.config))
          expect(serializedWrappedKey.vectorBase64).toEqual(Uint8ArrayToBase64(wrappedKey.vector!.asArray()))
          WrappedKeyDeserialize(serializedWrappedKey).then(deserializedKey => {
             expect(deserializedKey.base64).toEqual(wrappedKey.base64)
