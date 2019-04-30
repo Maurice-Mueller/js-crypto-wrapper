@@ -96,12 +96,13 @@ export class SymmetricKey {
          .then((key: CryptoKey) => new PublicKey(key)) as Promise<PublicKey>
    }
 
-   public unwrapPrivateKey (base64: string, vector: InitializationVector, config: KeyPairConfig = KeyPairConfig.DEFAULT)
+   public unwrapPrivateKey (base64: string, vector: InitializationVector | Uint8Array, config: KeyPairConfig = KeyPairConfig.DEFAULT)
       : Promise<PrivateKey> {
+      let iv = (vector as any)['vector'] ? (vector as any)['vector'] : vector
       return window.crypto.subtle.unwrapKey('pkcs8',
          Base64WithBinaryDataToArrayBuffer(base64),
          this.key,
-         this.decryptionParameters(vector),
+         this.decryptionParameters(iv),
          config.keyParams,
          config.extractable,
          config.keyUsage)

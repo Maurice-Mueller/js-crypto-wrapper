@@ -279,7 +279,22 @@ describe('test symmetric key', () => {
             })
          })
       })
+   })
 
+   it('(un)wrap private key with Uint8Array initialization vector', done => {
+      PrivateKey.fromBase64(PrivateKeyBase64).then(privateKey => {
+         SymmetricKey.random().then(symKey => {
+            symKey.wrapKey(privateKey).then(wrappedKey => {
+               symKey.unwrapPrivateKey(wrappedKey.base64, (wrappedKey.vector! as any).vector)
+                  .then(unwrappedPrivateKey => {
+                     unwrappedPrivateKey.extractKey().then(extractedUnwrapped => {
+                        expect(extractedUnwrapped).toEqual(PrivateKeyBase64)
+                        done()
+                     })
+                  })
+            })
+         })
+      })
    })
 
    it('(un)wrap private key with sym key from password', done => {
